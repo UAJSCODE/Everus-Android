@@ -13,5 +13,7 @@ data class ChatMessageEntity(
     val peerDeviceId: String,
     val body: String,
     val sentAt: Long,
-    val outgoing: Boolean
+    val outgoing: Boolean,
+    val mediaUrl: String? = null,
+    val mediaType: String? = null
 )

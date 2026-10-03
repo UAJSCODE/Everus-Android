@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.hilt.android.gradle.plugin)
@@ -15,16 +12,23 @@ val everusApiBaseUrl = providers.gradleProperty("everusApiBaseUrl")
 val everusDebugApiBaseUrl = providers.gradleProperty("everusDebugApiBaseUrl")
     .orElse(providers.environmentVariable("EVERUS_DEBUG_API_BASE_URL"))
     .orElse("http://10.0.2.2:8080/")
-    .get()
+require(everusApiBaseUrl.endsWith('/')) {
+    "everusApiBaseUrl must end with '/'"
+}
+require(everusDebugApiBaseUrl.get().endsWith('/')) {
+    "everusDebugApiBaseUrl must end with '/'"
+}
 
 android {
     namespace = "com.ujascode.everus"
-    compileSdk = 35
+    compileSdk {
+        version = release(37)
+    }
 
     defaultConfig {
         applicationId = "com.ujascode.everus"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -32,28 +36,8 @@ android {
         buildConfigField(
             "String",
             "EVERUS_API_BASE_URL",
-            "\"$everusApiBaseUrl\""
+            "\"${everusApiBaseUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\""
         )
-    }
-
-    signingConfigs {
-        create("release") {
-            val propsFile = file("${rootProject.projectDir}/everus-signing.properties")
-            val props = Properties()
-            if (propsFile.exists()) {
-                propsFile.inputStream().use { props.load(it) }
-            }
-
-            val storeFilePath = props.getProperty("RELEASE_KEYSTORE_FILE") ?: System.getenv("RELEASE_KEYSTORE_FILE") ?: throw IllegalArgumentException("RELEASE_KEYSTORE_FILE is not set. Check everus-signing.properties or environment variable RELEASE_KEYSTORE_FILE.")
-            val storePassword = props.getProperty("RELEASE_KEYSTORE_PASSWORD") ?: System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: throw IllegalArgumentException("RELEASE_KEYSTORE_PASSWORD is not set. Check everus-signing.properties or environment variable RELEASE_KEYSTORE_PASSWORD.")
-            val keyAlias = props.getProperty("RELEASE_KEY_ALIAS") ?: System.getenv("RELEASE_KEY_ALIAS") ?: throw IllegalArgumentException("RELEASE_KEY_ALIAS is not set. Check everus-signing.properties or environment variable RELEASE_KEY_ALIAS.")
-            val keyPassword = props.getProperty("RELEASE_KEY_PASSWORD") ?: System.getenv("RELEASE_KEY_PASSWORD") ?: throw IllegalArgumentException("RELEASE_KEY_PASSWORD is not set. Check everus-signing.properties or environment variable RELEASE_KEY_PASSWORD.")
-
-            this.storeFile = file(storeFilePath)
-            this.storePassword = storePassword
-            this.keyAlias = keyAlias
-            this.keyPassword = keyPassword
-        }
     }
 
     buildTypes {
@@ -61,32 +45,33 @@ android {
             buildConfigField(
                 "String",
                 "EVERUS_API_BASE_URL",
-                "\"$everusDebugApiBaseUrl\""
+                "\"${everusDebugApiBaseUrl.get().replace("\\", "\\\\").replace("\"", "\\\"")}\""
             )
         }
+        staging {
+            // Use production URLs (same as release)
+        }
         release {
-            isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("release")
+            optimization {
+                enable = false
+            }
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-
     buildFeatures {
         compose = true
         buildConfig = true
     }
+
 }
 
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2026.02.01"))
     implementation("androidx.activity:activity-compose:1.8.0")
     implementation("androidx.compose.material3:material3:1.3.0")
-    implementation("androidx.compose.material:material-icons-core:1.6.8")
-    implementation("androidx.compose.material:material-icons-extended:1.6.8")
     implementation("androidx.compose.ui:ui:1.6.8")
     implementation("androidx.compose.ui:ui-graphics:1.6.8")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")

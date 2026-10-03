@@ -1,0 +1,204 @@
+--------- beginning of main
+10-01 22:47:50.000   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.000   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.000   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.013   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.014   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.026 18372 18390 I NfcEventLog: readListFromLogFile: No NFC events found in log file
+--------- beginning of system
+10-01 22:47:50.033 18321 18321 D InsetsController: hide(ime())
+10-01 22:47:50.034 18321 18321 I ImeTracker: com.ujascode.everus:e7269957: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+10-01 22:47:50.035   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.035   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.035   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.035   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.035   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.035   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.035   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.035   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.042 18372 18372 I NfcService: Starting NFC service
+10-01 22:47:50.042 18372 18372 I NativeNfcManager: Loading C NFC Support
+10-01 22:47:50.047 18372 18372 D nativeloader: Load libnfc_nci_jni.so using class loader ns clns-shared-9 (caller=/apex/com.android.nfcservices/priv-app/NfcNciApexGoogle@CP41.260828.004.A7/NfcNciApexGoogle.apk): ok
+10-01 22:47:50.047 18372 18372 I libnfc_nci: JNI_OnLoad: NFC Service: loading nci JNI
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - Parsing file '/etc/libnfc-nci.conf'
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [NFC_DEBUG_ENABLED] = 0
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [NFA_STORAGE] = "/data/nfc"
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [PRESERVE_STORAGE] = 0x01
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [POLLING_TECH_MASK] = 0x0F
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [UICC_LISTEN_TECH_MASK] = 0x07
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [NFA_MAX_EE_SUPPORTED] = 0x02
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [AID_FOR_EMPTY_SELECT] = {08:A0:00:00:01:51:00:00:00}
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [AID_MATCHING_MODE] = 0x01
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [NCI_RESET_TYPE] = 0x00
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [PRESENCE_CHECK_RETRY_COUNT] = 0
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [EUICC_MEP_MODE] = 0x03
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [NFCEE_EVENT_RF_DISCOVERY_OPTION] = 0x00
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [OPTIMIZE_ROUTING_TABLE_UPDATE] = 0x00
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [NFA_EE_ROUTE_DEBOUNCE_TIMER] = 0x01
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [KOVIO_PRESENCE_CHECK_TYPE] = 0x00
+10-01 22:47:50.048 18372 18372 I libnfc_nci: ConfigFile - [RECOVERY_OPTION] = 1
+10-01 22:47:50.048 18372 18372 I libnfc_nci: NfcAdaptation:440
+10-01 22:47:50.048 18372 18372 I libnfc_nci: NfcAdaptation::InitializeHalDeviceContext: INfc::getService()
+10-01 22:47:50.050   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.051   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.051   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.051   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.051   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.051   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.051   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.051   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.053   312   312 I hwservicemanager: getTransport: Cannot find entry android.hardware.nfc@1.2::INfc/default in either framework or device VINTF manifest.
+10-01 22:47:50.056   312   312 I hwservicemanager: getTransport: Cannot find entry android.hardware.nfc@1.1::INfc/default in either framework or device VINTF manifest.
+10-01 22:47:50.057   312   312 I hwservicemanager: getTransport: Cannot find entry android.hardware.nfc@1.0::INfc/default in either framework or device VINTF manifest.
+10-01 22:47:50.063  1229  1229 D BaseActivity: Launcher flags updated: [] -[state_started]
+10-01 22:47:50.063  1229  1229 D BaseDepthController: setSurface:
+10-01 22:47:50.063  1229  1229 D BaseDepthController: 	mWaitingOnSurfaceValidity: false
+10-01 22:47:50.063  1229  1229 D BaseDepthController: 	mBaseSurface: null
+10-01 22:47:50.063  1229  1229 D BaseDepthController: mSurface is null and mCurrentBlur is: 90
+10-01 22:47:50.063  1229  1229 D KeyboardStateManager: hideKeyboard
+10-01 22:47:50.063  1229  1229 D KeyboardStateManager: isImeShown: false
+10-01 22:47:50.063   311 18392 W libc    : Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-01 22:47:50.063  1229  1229 D StatsLog: LAUNCHER_ONSTOP
+10-01 22:47:50.064  1229  1229 D StatsLog: LAUNCHER_GOOGLE_SEARCH_RESTORE_LIST_SIZE_AFTER_ACTIVITY_RESTART
+10-01 22:47:50.066 18321 18349 E EverusPairing: NETWORK_EXCEPTION[0] java.net.ConnectException: Failed to connect to /10.0.2.2:8080
+10-01 22:47:50.067 18321 18349 E EverusPairing: NETWORK_EXCEPTION[1] java.net.ConnectException: failed to connect to /10.0.2.2 (port 8080) from /:: (port 0) after 9999ms: connect failed: ENETUNREACH (Network is unreachable)
+10-01 22:47:50.067 18321 18349 E EverusPairing: NETWORK_EXCEPTION[2] android.system.ErrnoException: connect failed: ENETUNREACH (Network is unreachable)
+10-01 22:47:50.067  1229  2175 D GmsPlayProvider: Initiating graceful shutdown of binder channel.
+10-01 22:47:50.067  1229  2175 D GmsPlayProvider: Binder channel was terminated gracefully.
+10-01 22:47:50.070   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.070   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.070   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.070   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.070   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.070   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.070   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.070   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.087   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.087   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.087   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.087   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.087   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.087   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.087   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.087   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.099   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.099   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.099   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.099   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.099   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.099   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.099   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.108   715  1628 W libbinder.ServiceManagerCppClient: Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-01 22:47:50.117   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.117   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.135   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.135   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.135   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.135   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.135   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.136   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.136   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.139  1229  1253 W System  : A resource failed to call release. 
+10-01 22:47:50.139  1229  1253 W System  : A resource failed to call release. 
+10-01 22:47:50.139  1229  1253 W System  : A resource failed to call release. 
+10-01 22:47:50.139  1229  1253 W System  : A resource failed to call release. 
+10-01 22:47:50.139  1229  1253 W System  : A resource failed to call release. 
+10-01 22:47:50.139  1229  1253 W System  : A resource failed to call release. 
+10-01 22:47:50.144   311 18393 W libc    : Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-01 22:47:50.150   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.150   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.150   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.150   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.150   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.151   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.151   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.167   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.167   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.167   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.167   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.167   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.167   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.167   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.173   715  1800 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+10-01 22:47:50.187   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.187   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.187   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.187   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.187   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.187   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.187   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.187   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.213   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.213   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.213   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.213   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.213   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.213   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.218   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.218   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.218   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.218   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.218   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.218   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.224   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.224   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.244   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.244   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.244   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.244   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.244   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.244   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.288   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.289   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.289   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.289   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.289   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.289   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.304   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.304   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.304   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.304   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.304   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.304   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.320   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.320   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.320   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.320   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.320   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.320   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.324   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.324   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.336   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.337   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.337   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.337   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.337   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.337   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.352   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.352   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.352   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.352   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.352   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.352   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.369   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.369   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.369   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.369   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.369   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.384   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.384   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.384   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.384   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.384   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.432   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.526   530   530 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:50.541   530   579 W skia    : AGTM parsing failed flags.readFromStream(s) at 159
+10-01 22:47:51.074 18372 18391 W libbinder.ServiceManagerCppClient: Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-01 22:47:51.113   311 18394 W libc    : Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-01 22:47:51.119   715  1628 W libbinder.ServiceManagerCppClient: Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-01 22:47:51.130   311 18395 W libc    : Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-01 22:47:52.120 18372 18391 W libbinder.ServiceManagerCppClient: Waited one second for android.hardware.nfc.INfc/default (is service started? Number of threads started in the threadpool: 16. Are binder threads started and available?)
+10-01 22:47:52.125   311 18396 W libc    : Unable to set property "ctl.interface_start" to "aidl/android.hardware.nfc.INfc/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-01 22:47:52.135   715  1628 W libbinder.ServiceManagerCppClient: Waited one second for android.hardware.uwb.IUwb/default (is service started? Number of threads started in the threadpool: 32. Are binder threads started and available?)
+10-01 22:47:52.140   311 18397 W libc    : Unable to set property "ctl.interface_start" to "aidl/android.hardware.uwb.IUwb/default": PROP_ERROR_HANDLE_CONTROL_MESSAGE (0x20)
+10-01 22:47:52.189   553   553 I adbd    : adbd service requested 'shell,v2,TERM=xterm-256color:export ANDROID_LOG_TAGS=''; exec logcat '-t' '200''

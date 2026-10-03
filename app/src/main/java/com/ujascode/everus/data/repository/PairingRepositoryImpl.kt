@@ -6,15 +6,25 @@ import com.ujascode.everus.BuildConfig
 import com.ujascode.everus.data.model.DeviceRegistrationBody
 import com.ujascode.everus.data.model.EncryptedMessageBody
 import com.ujascode.everus.data.model.EncryptedMessageResponse
+import com.ujascode.everus.data.model.MessageDeliveryAckBody
 import com.ujascode.everus.data.model.PairingRealtimeEvent
 import com.ujascode.everus.data.model.PairingRequestBody
 import com.ujascode.everus.data.model.PairingResponseBody
 import com.ujascode.everus.data.model.PairingResponseResult
-import com.ujascode.everus.data.model.MessageDeliveryAckBody
+import com.ujascode.everus.data.model.PairingResult
+import com.ujascode.everus.data.model.PairingRequestResponse
 import com.ujascode.everus.data.network.EverusApi
+import com.ujascode.everus.data.network.MediaTransferDownloadResponse
+import com.ujascode.everus.data.network.MediaTransferInitRequest
+import com.ujascode.everus.data.network.MediaTransferInitResponse
+import com.ujascode.everus.data.network.MediaTransferStatusResponse
+import com.ujascode.everus.data.network.MediaTransferUploadRequest
+import com.ujascode.everus.data.network.MediaTransferUploadResponse
 import com.ujascode.everus.data.network.RealtimeConnectionManager
 import com.ujascode.everus.domain.repository.IdentityRepository
 import com.ujascode.everus.domain.repository.PairingRepository
+import com.ujascode.everus.data.db.RelationshipDao
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,11 +41,13 @@ import javax.inject.Singleton
 class PairingRepositoryImpl @Inject constructor(
     private val everusApi: EverusApi,
     private val identityRepository: IdentityRepository,
-    private val realtimeConnectionManager: RealtimeConnectionManager
+    private val realtimeConnectionManager: RealtimeConnectionManager,
+    private val relationshipDao: RelationshipDao
 ) : PairingRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val mutableEvents = MutableSharedFlow<PairingRealtimeEvent>(replay = 32, extraBufferCapacity = 64)
     override val events = mutableEvents.asSharedFlow()
+    override val connectionStatus: StateFlow<Boolean> = realtimeConnectionManager.connected
 
     init {
         scope.launch {
@@ -44,7 +56,7 @@ class PairingRepositoryImpl @Inject constructor(
                     .onSuccess { event ->
                         if (event != null) mutableEvents.emit(event)
                     }
-                    .onFailure { Log.w(TAG, "WEBSOCKET_INVALID_EVENT") }
+                    .onFailure { Log.w(TAG, "WEBSOCKET_INVALID_ERROR") }
             }
         }
     }
@@ -79,7 +91,7 @@ class PairingRepositoryImpl @Inject constructor(
         Unit
     }
 
-    override suspend fun createPairingRequest(targetDeviceId: String): String = withContext(Dispatchers.IO) {
+    override suspend fun createPairingRequest(targetDeviceId: String): PairingResult = withContext(Dispatchers.IO) {
         val fromDeviceId = identityRepository.getDeviceId()
         require(targetDeviceId.isNotBlank() && targetDeviceId != fromDeviceId) {
             "Enter a different registered Device ID"
@@ -102,8 +114,12 @@ class PairingRepositoryImpl @Inject constructor(
             val message = response.errorBody()?.string()?.let(::extractError)
             throw IllegalStateException(message ?: "Pairing request failed (${response.code()})")
         }
+        val responseBody = response.body() ?: throw IllegalStateException("Pairing request response was empty")
         Log.i(TAG, "PAIRING_REQUEST_SENT")
-        requestId
+        PairingResult(
+            requestId = responseBody.requestId,
+            expiresAt = responseBody.expiresAt
+        )
     }
 
     override suspend fun respondToPairing(
@@ -151,6 +167,97 @@ class PairingRepositoryImpl @Inject constructor(
         if (!response.isSuccessful) {
             throw IllegalStateException("Message delivery acknowledgement failed (${response.code()})")
         }
+    }
+
+    // MEDIA TRANSFER FUNCTIONS
+    override suspend fun initMediaTransfer(
+        senderDeviceId: String,
+        receiverDeviceId: String,
+        filename: String,
+        mimeType: String,
+        fileSize: Long
+    ): MediaTransferInitResponse {
+        return withContext(Dispatchers.IO) {
+            val request = MediaTransferInitRequest(
+                senderDeviceId = senderDeviceId,
+                receiverDeviceId = receiverDeviceId,
+                filename = filename,
+                mimeType = mimeType,
+                fileSize = fileSize
+            )
+            val response = everusApi.initMediaTransfer(request)
+            if (!response.isSuccessful) {
+                throw IllegalStateException("Media transfer initialization failed (${response.code()})")
+            }
+            response.body() ?: throw IllegalStateException("Media transfer initialization response was empty")
+        }
+    }
+
+    override suspend fun uploadMediaChunk(
+        transferId: String,
+        chunkIndex: Int,
+        totalChunks: Int,
+        data: String,
+        checksum: String?
+    ): MediaTransferUploadResponse {
+        return withContext(Dispatchers.IO) {
+            val request = MediaTransferUploadRequest(
+                chunkIndex = chunkIndex,
+                totalChunks = totalChunks,
+                data = data,
+                checksum = checksum
+            )
+            val response = everusApi.uploadMediaChunk(transferId, request)
+            if (!response.isSuccessful) {
+                throw IllegalStateException("Media chunk upload failed (${response.code()})")
+            }
+            response.body() ?: throw IllegalStateException("Media chunk upload response was empty")
+        }
+    }
+
+    override suspend fun getMediaDownloadUrl(
+        transferId: String,
+        authToken: String
+    ): MediaTransferDownloadResponse {
+        return withContext(Dispatchers.IO) {
+            val response = everusApi.getMediaDownloadUrl(transferId, authToken)
+            if (!response.isSuccessful) {
+                throw IllegalStateException("Failed to get media download URL (${response.code()})")
+            }
+            response.body() ?: throw IllegalStateException("Media download URL response was empty")
+        }
+    }
+
+    override suspend fun getMediaTransferStatus(
+        transferId: String
+    ): MediaTransferStatusResponse {
+        return withContext(Dispatchers.IO) {
+            val response = everusApi.getMediaTransferStatus(transferId)
+            if (!response.isSuccessful) {
+                throw IllegalStateException("Failed to get media transfer status (${response.code()})")
+            }
+            response.body() ?: throw IllegalStateException("Media transfer status response was empty")
+        }
+    }
+
+    override suspend fun cancelPairingRequest(requestId: String): PairingResponseResult = withContext(Dispatchers.IO) {
+        val deviceId = identityRepository.getDeviceId()
+        val timestamp = System.currentTimeMillis()
+        val nonce = newNonce()
+        val signature = sign(
+            "pair-cancel",
+            requestId,
+            deviceId,
+            timestamp.toString(),
+            nonce
+        )
+        val response = everusApi.cancelPairingRequest(
+            requestId
+        )
+        if (!response.isSuccessful) {
+            throw IllegalStateException("Pairing cancellation failed (${response.code()})")
+        }
+        response.body() ?: throw IllegalStateException("Pairing cancellation response was empty")
     }
 
     private fun parseEvent(json: String): PairingRealtimeEvent? {
@@ -217,6 +324,35 @@ class PairingRepositoryImpl @Inject constructor(
             )
             current = current.cause
             depth++
+        }
+    }
+
+    override suspend fun deleteRelationship() = relationshipDao.clearRelationship()
+
+    override suspend fun getActivePairingRequest(): PairingResult? {
+        return try {
+            val response = everusApi.getActivePairingRequest()
+            if (response.isSuccessful) {
+                val pairingResponse = response.body()
+                if (pairingResponse != null) {
+                    // Check if the request is in an active state (not excluded states)
+                    val status = pairingResponse.status.lowercase()
+                    when (status) {
+                        "cancelled", "expired", "declined", "accepted", "paired" -> null
+                        else -> PairingResult(
+                            requestId = pairingResponse.requestId,
+                            expiresAt = pairingResponse.expiresAt
+                        )
+                    }
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            // If there's an error (network, parsing, etc.), return null
+            null
         }
     }
 

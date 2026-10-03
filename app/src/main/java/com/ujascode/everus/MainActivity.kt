@@ -29,6 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.ujascode.everus.ui.theme.EverusTheme
 import com.ujascode.everus.ui.pairing.PairingScreen
+import com.ujascode.everus.presentation.viewmodel.PairingViewModel
+import com.ujascode.everus.ui.home.HomeScreen
+import androidx.compose.material3.CircularProgressIndicator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

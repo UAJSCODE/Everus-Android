@@ -1,0 +1,1 @@
+- [PairingScreen Attachment UI Implementation](memory/attachment-ui-implementation.md) — Implemented Android media picker UI for photo/video/file sharing in chat interface

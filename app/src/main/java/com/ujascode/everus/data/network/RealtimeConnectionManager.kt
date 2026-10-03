@@ -19,10 +19,12 @@ import kotlinx.coroutines.withTimeout
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
+import com.ujascode.everus.data.network.DebugHostResolver
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import org.json.JSONObject
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -85,9 +87,12 @@ class RealtimeConnectionManager @Inject constructor(
         val signed = withContext(Dispatchers.Default) {
             identityRepository.sign("ws\n$deviceId\n$timestamp\n$nonce".toByteArray())
         }
-        val base = BuildConfig.EVERUS_API_BASE_URL.toHttpUrl()
+        val baseUrlString = if (BuildConfig.DEBUG) DebugHostResolver.getBaseUrl() else BuildConfig.EVERUS_API_BASE_URL
+        val base = baseUrlString.toHttpUrl()
+        val webSocketScheme = if (base.isHttps) "wss" else "ws"
         val url = HttpUrl.Builder()
-            .scheme(if (base.isHttps) "wss" else "ws")
+            // HttpUrl.Builder accepts HTTP(S) schemes; OkHttp upgrades the request to WS(S).
+            .scheme(if (base.isHttps) "https" else "http")
             .host(base.host)
             .port(base.port)
             .addPathSegment("ws")
@@ -96,28 +101,48 @@ class RealtimeConnectionManager @Inject constructor(
             .addQueryParameter("nonce", nonce)
             .addQueryParameter("signature", android.util.Base64.encodeToString(signed, android.util.Base64.NO_WRAP))
             .build()
+        Log.i(TAG, "WEBSOCKET_URL=$webSocketScheme://${url.host}:${url.port}${url.encodedPath}")
 
-        val opened = CompletableDeferred<Unit>()
+        val transportOpened = CompletableDeferred<Unit>()
+        val authenticated = CompletableDeferred<Unit>()
         val closed = CompletableDeferred<Unit>()
         val request = Request.Builder().url(url).build()
         val socket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
-                mutableConnected.value = true
-                Log.i(TAG, "WEBSOCKET_CONNECTED")
-                opened.complete(Unit)
+                Log.i(TAG, "WEBSOCKET_TRANSPORT_OPEN")
+                transportOpened.complete(Unit)
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
+                val isReady = runCatching {
+                    JSONObject(text).optString("type") == "connection.ready"
+                }.getOrDefault(false)
+                if (isReady && authenticated.complete(Unit)) {
+                    mutableConnected.value = true
+                    Log.i(TAG, "WEBSOCKET_CONNECTED")
+                }
                 mutableIncoming.tryEmit(text)
             }
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+                Log.w(TAG, "WEBSOCKET_CLOSING code=$code reason=${safeCloseReason(reason)}")
+                if (authenticated.completeExceptionally(
+                        IllegalStateException("WebSocket closed before authentication (code=$code)")
+                    )
+                ) {
+                    mutableConnected.value = false
+                }
                 webSocket.close(code, reason)
-                closed.complete(Unit)
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                Log.w(TAG, "WEBSOCKET_CLOSED code=$code reason=${safeCloseReason(reason)}")
                 mutableConnected.value = false
+                if (!authenticated.isCompleted) {
+                    authenticated.completeExceptionally(
+                        IllegalStateException("WebSocket closed before authentication (code=$code)")
+                    )
+                }
                 closed.complete(Unit)
             }
 
@@ -126,12 +151,16 @@ class RealtimeConnectionManager @Inject constructor(
                 Log.e(TAG, "WEBSOCKET_FAILURE httpStatus=${response?.code ?: "none"}")
                 logExceptionChain(t)
                 val error = IllegalStateException("WebSocket connection failed", t)
-                opened.completeExceptionally(error)
+                transportOpened.completeExceptionally(error)
+                authenticated.completeExceptionally(error)
                 closed.completeExceptionally(error)
             }
         })
         try {
-            withTimeout(12_000) { opened.await() }
+            withTimeout(12_000) {
+                transportOpened.await()
+                authenticated.await()
+            }
             closed.await()
         } finally {
             mutableConnected.value = false
@@ -154,6 +183,14 @@ class RealtimeConnectionManager @Inject constructor(
             current = current.cause
             depth++
         }
+    }
+
+    private fun safeCloseReason(reason: String): String {
+        val sanitized = reason
+            .replace(Regex("(?i)(token|signature|secret|password|authorization|private.?key)=?[^\\s,;]*"), "$1=<redacted>")
+            .replace(Regex("[\\r\\n\\t]"), " ")
+            .take(120)
+        return sanitized.ifBlank { "<empty>" }
     }
 
     companion object {

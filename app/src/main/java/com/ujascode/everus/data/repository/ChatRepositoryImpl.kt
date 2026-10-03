@@ -16,7 +16,7 @@ class ChatRepositoryImpl @Inject constructor(
     override fun observeMessages(peerDeviceId: String): Flow<List<ChatMessage>> =
         chatMessageDao.observeMessages(peerDeviceId).map { messages ->
             messages.map {
-                ChatMessage(it.messageId, it.peerDeviceId, it.body, it.sentAt, it.outgoing)
+                ChatMessage(it.messageId, it.peerDeviceId, it.body, it.sentAt, it.outgoing, it.mediaUrl, it.mediaType)
             }
         }
 
@@ -27,7 +27,9 @@ class ChatRepositoryImpl @Inject constructor(
                 peerDeviceId = message.peerDeviceId,
                 body = message.text,
                 sentAt = message.sentAt,
-                outgoing = message.outgoing
+                outgoing = message.outgoing,
+                mediaUrl = message.mediaUrl,
+                mediaType = message.mediaType
             )
         ) != -1L
 }

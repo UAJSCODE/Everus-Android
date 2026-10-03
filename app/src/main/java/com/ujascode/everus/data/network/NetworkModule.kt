@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import com.ujascode.everus.data.network.DebugHostResolver
 
 /**
  * Dependency injection module for networking components.
@@ -42,11 +43,12 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+        val baseUrl = if (BuildConfig.DEBUG) DebugHostResolver.getBaseUrl() else BuildConfig.EVERUS_API_BASE_URL
         if (BuildConfig.DEBUG) {
-            Log.i(TAG, "SERVER_URL=${BuildConfig.EVERUS_API_BASE_URL}")
+            Log.i(TAG, "SERVER_URL=$baseUrl")
         }
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.EVERUS_API_BASE_URL)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

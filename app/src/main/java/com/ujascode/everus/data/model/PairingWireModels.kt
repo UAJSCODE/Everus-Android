@@ -21,7 +21,8 @@ data class PairingRequestBody(
 data class PairingRequestResponse(
     val requestId: String,
     val status: String,
-    val delivered: Boolean
+    val delivered: Boolean,
+    val expiresAt: Long  // Timestamp when request expires
 )
 
 data class PairingResponseBody(
@@ -97,5 +98,7 @@ data class ChatMessage(
     val peerDeviceId: String,
     val text: String,
     val sentAt: Long,
-    val outgoing: Boolean
+    val outgoing: Boolean,
+    val mediaUrl: String? = null,
+    val mediaType: String? = null
 )
