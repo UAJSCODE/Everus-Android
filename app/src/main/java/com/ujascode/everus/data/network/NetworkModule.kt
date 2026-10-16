@@ -43,10 +43,8 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
-        val baseUrl = if (BuildConfig.DEBUG) DebugHostResolver.getBaseUrl() else BuildConfig.EVERUS_API_BASE_URL
-        if (BuildConfig.DEBUG) {
-            Log.i(TAG, "SERVER_URL=$baseUrl")
-        }
+        val baseUrl = BuildConfig.EVERUS_API_BASE_URL
+        Log.i(TAG, "SERVER_URL=$baseUrl")
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)

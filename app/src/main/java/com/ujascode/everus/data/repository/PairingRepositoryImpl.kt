@@ -62,7 +62,7 @@ class PairingRepositoryImpl @Inject constructor(
     }
 
     override suspend fun registerDeviceAndConnect() = withContext(Dispatchers.IO) {
-        identityRepository.ensureIdentityExists()
+        // Note: Identity should already be ensured by the ViewModel before calling this
         val deviceId = identityRepository.getDeviceId()
         val x25519 = encode(identityRepository.getX25519PublicKey())
         val ed25519 = encode(identityRepository.getEd25519PublicKey())
@@ -166,6 +166,25 @@ class PairingRepositoryImpl @Inject constructor(
         )
         if (!response.isSuccessful) {
             throw IllegalStateException("Message delivery acknowledgement failed (${response.code()})")
+        }
+    }
+
+    override suspend fun deleteMessage(
+        messageId: String,
+        deviceId: String,
+        timestamp: Long,
+        nonce: String,
+        signature: String
+    ) = withContext(Dispatchers.IO) {
+        val response = everusApi.deleteMessage(
+            messageId,
+            deviceId,
+            timestamp,
+            nonce,
+            signature
+        )
+        if (!response.isSuccessful) {
+            throw IllegalStateException("Message delete failed (${response.code()})")
         }
     }
 
@@ -292,6 +311,9 @@ class PairingRepositoryImpl @Inject constructor(
                 iv = decode(value.getString("iv")),
                 ciphertext = decode(value.getString("ciphertext")),
                 signature = decode(value.getString("signature"))
+            )
+            "message.deleted" -> PairingRealtimeEvent.MessageDeleted(
+                messageId = value.getString("messageId")
             )
             else -> null
         }

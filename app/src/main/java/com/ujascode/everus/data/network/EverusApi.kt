@@ -11,6 +11,7 @@ import com.ujascode.everus.data.model.PairingResponseResult
 import com.ujascode.everus.data.model.MessageDeliveryAckBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -41,6 +42,15 @@ interface EverusApi {
 
     @POST("messages/ack")
     suspend fun acknowledgeMessage(@Body request: MessageDeliveryAckBody): Response<EncryptedMessageResponse>
+
+    @DELETE("messages/{messageId}")
+    suspend fun deleteMessage(
+        @Path("messageId") messageId: String,
+        @Query("deviceId") deviceId: String,
+        @Query("timestamp") timestamp: Long,
+        @Query("nonce") nonce: String,
+        @Query("signature") signature: String
+    ): Response<MessageDeleteResponse>
 
     // MEDIA TRANSFER ENDPOINTS
     @POST("media/init")
@@ -114,4 +124,10 @@ data class MediaTransferStatusResponse(
     val checksum: String? = null,
     val createdAt: String, // ISO 8601 timestamp
     val expiresAt: String // ISO 8601 timestamp
+)
+
+// DELETE MESSAGE RESPONSE
+data class MessageDeleteResponse(
+    val messageId: String,
+    val deleted: Boolean
 )

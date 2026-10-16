@@ -87,7 +87,7 @@ class RealtimeConnectionManager @Inject constructor(
         val signed = withContext(Dispatchers.Default) {
             identityRepository.sign("ws\n$deviceId\n$timestamp\n$nonce".toByteArray())
         }
-        val baseUrlString = if (BuildConfig.DEBUG) DebugHostResolver.getBaseUrl() else BuildConfig.EVERUS_API_BASE_URL
+        val baseUrlString = BuildConfig.EVERUS_API_BASE_URL
         val base = baseUrlString.toHttpUrl()
         val webSocketScheme = if (base.isHttps) "wss" else "ws"
         val url = HttpUrl.Builder()

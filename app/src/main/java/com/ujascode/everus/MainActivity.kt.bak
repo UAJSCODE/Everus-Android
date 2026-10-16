@@ -1,0 +1,263 @@
+package com.ujascode.everus
+
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.core.context.ContextCompat
+import androidx.lifecycle.viewmodelScope
+import com.ujascode.everus.ui.theme.EverusTheme
+import com.ujascode.everus.ui.onboarding.OnboardingViewModel
+import com.ujascode.everus.ui.onboarding.WelcomeScreen
+import com.ujascode.everus.ui.onboarding.PrivacyScreen
+import com.ujascode.everus.ui.onboarding.IdentityScreen
+import com.ujascode.everus.ui.onboarding.PairingScreen
+import com.ujascode.everus.ui.onboarding.PairingSuccessScreen
+import com.ujascode.everus.ui.home.HomeScreen
+import com.ujascode.everus.presentation.viewmodel.PairingViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.compose.HiltViewModel
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.ui.Alignment
+
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+    private var localNetworkPermissionGranted by mutableStateOf(false)
+
+    private val requestLocalNetworkPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            localNetworkPermissionGranted = granted
+        }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        localNetworkPermissionGranted = !requiresLocalNetworkPermission() ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_LOCAL_NETWORK
+            ) == PackageManager.PERMISSION_GRANTED
+
+        setContent {
+            EverusTheme {
+                val viewModel: PairingViewModel = hiltViewModel()
+                val onboardingViewModel: OnboardingViewModel = hiltViewModel()
+                // Create a remembered state for local network permission that updates when it changes
+                val localNetworkPermissionGrantedState by rememberUpdatedState { localNetworkPermissionGranted }
+
+                if (!localNetworkPermissionGrantedState) {
+                    LocalNetworkPermissionContent {
+                        requestLocalNetworkPermission.launch(
+                            Manifest.permission.ACCESS_LOCAL_NETWORK
+                        )
+                    }
+                } else {
+                    // Observe the UI state and show appropriate screen
+                    when (viewModel.uiState.value) {
+                        is PairingViewModel.UiState.Loading -> {
+                            LoadingScreen()
+                        }
+                        is PairingViewModel.UiState.Paired -> {
+                            // Extract relationship from Paired state
+                            val relationship = (viewModel.uiState.value as PairingViewModel.UiState.Paired).relationship
+                            HomeScreen(relationship)
+                        }
+                        else -> {
+                            // Show onboarding flow for all other states (including idle, request sent, etc.)
+                            OnboardingFlow(
+                                onboardingViewModel = onboardingViewModel,
+                                pairingViewModel = viewModel
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!localNetworkPermissionGranted && savedInstanceState == null) {
+            requestLocalNetworkPermission.launch(Manifest.permission.ACCESS_LOCAL_NETWORK)
+        }
+    }
+
+    private fun requiresLocalNetworkPermission(): Boolean =
+        BuildConfig.DEBUG &&
+            Build.VERSION.SDK_INT >= 37 &&
+            BuildConfig.EVERUS_API_BASE_URL.startsWith("http://10.0.2.2:")
+}
+
+@Composable
+private fun LocalNetworkPermissionContent(onGrant: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            "Local network access is needed to connect to the Everus development server.",
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onGrant) {
+            Text("Allow local network access")
+        }
+    }
+}
+
+@Composable
+private fun LoadingScreen() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            "Loading Everus...",
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
+private fun ErrorScreen(message: String, onRetry: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Error",
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(
+            onClick = onRetry,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Retry")
+        }
+    }
+}
+
+@Composable
+private fun OnboardingFlow(
+    onboardingViewModel: OnboardingViewModel,
+    pairingViewModel: PairingViewModel
+) {
+    var currentStep by onboardingViewModel.currentStep.collectAsState(initial = OnboardingViewModel.Step.WELCOME)
+    var pairingEvent by onboardingViewModel.pairingEvent.collectAsState(initial = null)
+    var ownDeviceId by pairingViewModel.ownDeviceId.collectAsState(initial = "")
+    var relationship by pairingViewModel.relationship.collectAsState(initial = null)
+    var uiState by pairingViewModel.uiState.collectAsState(initial = PairingViewModel.UiState.Loading)
+
+    // Handle pairing events from onboarding
+    pairingEvent?.let { event ->
+        // Handle incoming pairing request
+        if (event is com.ujascode.everus.data.model.PairingRealtimeEvent.Request) {
+            // Show incoming request in onboarding pairing screen
+            // For now, we'll auto-accept for demo purposes
+            // In a real implementation, we'd show the incoming request UI and let user accept/reject
+            viewModelScope.launch {
+                try {
+                    // Auto-accept the pairing request for demo
+                    pairingViewModel.respondToPairing(requestId = event.requestId, accept = true)
+                } catch (e: Exception) {
+                    // Handle error
+                }
+            }
+        }
+        // Handle accepted pairing
+        else if (event is com.ujascode.everus.data.model.PairingRealtimeEvent.Accepted) {
+            // Move to pairing success after a brief delay to show the accepted state
+            // In a real implementation, we'd wait for the pairing to complete
+            viewModelScope.launch {
+                try {
+                    // Wait a moment then check if we're paired
+                    delay(1000)
+                    val rel = pairingViewModel.relationship.value
+                    if (rel != null && rel.status?.name == "PAIRED") {
+                        onboardingViewModel.nextStep()
+                    }
+                } catch (e: Exception) {
+                    // Handle error
+                }
+            }
+        }
+    }
+
+    // Check if we're already paired (should go to home screen)
+    if (relationship != null && relationship?.status?.name == "PAIRED") {
+        HomeScreen(relationship)
+        return
+    }
+
+    // Show onboarding screens based on current step
+    when (currentStep) {
+        OnboardingViewModel.Step.WELCOME -> {
+            WelcomeScreen(
+                onNext = { onboardingViewModel.nextStep() }
+            )
+        }
+        OnboardingViewModel.Step.PRIVACY -> {
+            PrivacyScreen(
+                onNext = { onboardingViewModel.nextStep() },
+                onLearnMore = {} // TODO: Implement learn more
+            )
+        }
+        OnboardingViewModel.Step.IDENTITY -> {
+            IdentityScreen(
+                onNext = { onboardingViewModel.nextStep() }
+            )
+        }
+        OnboardingViewModel.Step.PAIRING -> {
+            PairingScreen(
+                onNext = {
+                    // For now, we'll continue to next step and let the actual pairing happen in background
+                    // In a real implementation, we'd validate input and initiate pairing
+                    onboardingViewModel.nextStep()
+                }
+            )
+        }
+        OnboardingViewModel.Step.PAIRING_SUCCESS -> {
+            PairingSuccessScreen(
+                partnerName = "Partner", // TODO: Get actual partner name from relationship
+                onNext = {
+                    // Transition to main app after onboarding completes
+                    // In a real implementation, we'd wait for actual pairing to complete
+                    // For now, we'll just show home screen with mock data
+                }
+            )
+        }
+    }
+}

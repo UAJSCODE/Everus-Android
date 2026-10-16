@@ -140,6 +140,7 @@ fun PairingScreen(viewModel: PairingViewModel = hiltViewModel()) {
             }
             when (val state = uiState) {
                 UiState.Loading -> PairingProgress("Preparing secure identity...")
+                UiState.Submitting -> PairingProgress("Sending pairing request...")
                 UiState.Idle -> IdleContent(viewModel::startPairing)
                 is UiState.RequestSent -> RequestSentContent(
                     targetDeviceId = state.targetDeviceId,
@@ -360,7 +361,9 @@ private fun PairedContent(
 
     // Auto-scroll to bottom when new messages arrive
     LaunchedEffect(messages) {
-        lazyListState.scrollToItem(messages.size - 1)
+        if (messages.size > 0) {
+            lazyListState.scrollToItem(messages.size - 1)
+        }
     }
 
     Column(
@@ -643,7 +646,7 @@ private fun TextMessageSent(message: ChatMessage) {
             .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
     ) {
         Text(
-            text = message.text,
+            text = message.body,
             color = MaterialTheme.colorScheme.onPrimary,
             style = MaterialTheme.typography.bodyMedium
         )
@@ -665,7 +668,7 @@ private fun TextMessageReceived(message: ChatMessage) {
             .background(MaterialTheme.colorScheme.secondaryContainer, RoundedCornerShape(12.dp))
     ) {
         Text(
-            text = message.text,
+            text = message.body,
             color = MaterialTheme.colorScheme.onSecondaryContainer,
             style = MaterialTheme.typography.bodyMedium
         )

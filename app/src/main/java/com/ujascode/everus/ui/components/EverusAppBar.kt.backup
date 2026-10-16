@@ -1,0 +1,61 @@
+package com.ujascode.everus.ui.components
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.drawscope.DrawScope
+
+private val DefaultActionIcon: DrawScope.() -> Unit = {}
+
+@Composable
+fun EverusAppBar(
+    title: String = "Everus",
+    showBackButton: Boolean = false,
+    onBackClicked: () -> Unit = {},
+    actionIcon: DrawScope.() -> Unit = DefaultActionIcon,
+    onActionClicked: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        title = {
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 20.sp,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+            )
+        },
+        navigationIcon = {
+            if (showBackButton) {
+                IconButton(
+                    onClick = onBackClicked,
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Icon(
+                        imageVector = androidx.compose.material3.Icons.Default.Check,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+        },
+        actions = {
+            if (actionIcon != DefaultActionIcon) {
+                IconButton(
+                    onClick = onActionClicked,
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Size(24.dp) {
+                        drawWithContent {
+                            actionIcon()
+                        }
+                    }
+                }
+            }
+        }
+    )
+}

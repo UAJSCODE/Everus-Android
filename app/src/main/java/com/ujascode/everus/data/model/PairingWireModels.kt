@@ -91,14 +91,8 @@ sealed interface PairingRealtimeEvent {
         val ciphertext: ByteArray,
         val signature: ByteArray
     ) : PairingRealtimeEvent
-}
 
-data class ChatMessage(
-    val messageId: String,
-    val peerDeviceId: String,
-    val text: String,
-    val sentAt: Long,
-    val outgoing: Boolean,
-    val mediaUrl: String? = null,
-    val mediaType: String? = null
-)
+    data class MessageDeleted(
+        val messageId: String
+    ) : PairingRealtimeEvent
+}

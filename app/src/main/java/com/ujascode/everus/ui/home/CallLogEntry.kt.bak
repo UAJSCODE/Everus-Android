@@ -1,0 +1,130 @@
+package com.ujascode.everus.ui.home
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.canvas.Canvas
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.drawscope.DrawScope
+import androidx.compose.layout.Arrangement
+import androidx.compose.material3.LocalContentColor
+import com.ujascode.everus.ui.components.EverusButton
+import com.ujascode.everus.ui.theme.EverusTheme
+import kotlin.collections.firstOrElse
+
+@Composable
+fun CallLogEntry(
+    callerName: String,
+    callType: String, // "Missed", "Incoming", "Outgoing"
+    timestamp: String,
+    duration: String? = null, // For outgoing/incoming calls
+    onClick: () -> Unit
+) {
+    EverusButton(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Caller avatar
+            androidx.compose.foundation.layout.Size(40.dp) {
+                androidx.compose.foundation.canvas.Canvas(
+                    modifier = Modifier
+                        .size(40.dp)
+                ) {
+                    val centerX = size.width / 2
+                    val centerY = size.height / 2
+                    val radius = 20.dp
+
+                    drawCircle(
+                        color = androidx.compose.material3.LocalContentColor.current.copy(alpha = 0.1f),
+                        center = androidx.compose.ui.Offset(centerX, centerY),
+                        radius = radius
+                    )
+
+                    // Initial
+                    val initial = callerName.take(1).uppercase().firstOrElse { '?' }.toString()
+                    val textPaint = android.graphics.Paint().apply {
+                        color = androidx.compose.material3.LocalContentColor.current
+                        textSize = 16.sp
+                        isAntiAlias = true
+                        textAlign = android.graphics.Paint.Align.CENTER
+                    }
+                    drawText(
+                        text = initial,
+                        top = centerY - 8.sp,
+                        left = centerX - (textPaint.measureText(initial) / 2),
+                        paint = textPaint
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Text(
+                    text = callerName,
+                    fontSize = 16.sp,
+                    color = androidx.compose.material3.LocalContentColor.current
+                )
+                Text(
+                    text = timestamp,
+                    fontSize = 12.sp,
+                    color = androidx.compose.material3.LocalContentColor.current.copy(alpha = 0.6f)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            // Call type and duration
+            Column(
+                horizontalArrangement = Arrangement.End
+            ) {
+                when (callType) {
+                    "Missed" -> {
+                        Text(
+                            text = "Missed",
+                            fontSize = 12.sp,
+                            color = Color(0xFFFF3B30) // Red
+                        )
+                    }
+                    "Incoming" -> {
+                        Text(
+                            text = "Incoming • $duration",
+                            fontSize = 12.sp,
+                            color = androidx.compose.material3.LocalContentColor.current
+                        )
+                    }
+                    "Outgoing" -> {
+                        Text(
+                            text = "Outgoing • $duration",
+                            fontSize = 12.sp,
+                            color = androidx.compose.material3.LocalContentColor.current
+                        )
+                    }
+                    else -> {
+                        Text(
+                            text = callType,
+                            fontSize = 12.sp,
+                            color = androidx.compose.material3.LocalContentColor.current
+                        )
+                    }
+                }
+            }
+        }
+    }
+}

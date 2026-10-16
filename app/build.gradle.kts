@@ -14,7 +14,7 @@ val everusApiBaseUrl = providers.gradleProperty("everusApiBaseUrl")
     .get()
 val everusDebugApiBaseUrl = providers.gradleProperty("everusDebugApiBaseUrl")
     .orElse(providers.environmentVariable("EVERUS_DEBUG_API_BASE_URL"))
-    .orElse("http://10.0.2.2:8080/")
+    .orElse("https://everus-server.onrender.com/")
     .get()
 
 android {
@@ -82,7 +82,7 @@ android {
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2026.02.01"))
+    implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.activity:activity-compose:1.8.0")
     implementation("androidx.compose.material3:material3:1.3.0")
     implementation("androidx.compose.material:material-icons-core:1.6.8")
@@ -112,9 +112,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2026.02.01"))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.8")

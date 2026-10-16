@@ -14,4 +14,10 @@ interface ChatMessageDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMessage(message: ChatMessageEntity): Long
+
+    @Query("DELETE FROM chat_message WHERE messageId = :messageId")
+    suspend fun deleteMessage(messageId: String): Int
+
+    @Query("DELETE FROM chat_message WHERE peerDeviceId = :peerDeviceId")
+    fun deleteAllMessages(peerDeviceId: String): Int
 }

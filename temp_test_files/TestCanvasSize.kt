@@ -1,0 +1,22 @@
+package com.ujascode.everus.ui.components
+
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun TestCanvasWithSize() {
+    Canvas(
+        modifier = Modifier
+            .size(24.dp)
+            .drawWithContent {
+                drawContent()
+            }
+    ) {
+        // Content would go here
+    }
+}
+

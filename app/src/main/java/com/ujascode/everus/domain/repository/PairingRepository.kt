@@ -30,6 +30,14 @@ interface PairingRepository {
 
     suspend fun acknowledgeMessage(messageId: String)
 
+    suspend fun deleteMessage(
+        messageId: String,
+        deviceId: String,
+        timestamp: Long,
+        nonce: String,
+        signature: String
+    )
+
     suspend fun deleteRelationship()
 
     // MEDIA TRANSFER FUNCTIONS
